@@ -1,10 +1,12 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheNemesis
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoBehaviourPunCallbacks
     {
         public static GameManager Instance { get; private set; }
 
@@ -36,6 +38,19 @@ namespace TheNemesis
         {
 
         }
+
+        #region pun callbacks
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            base.OnPlayerEnteredRoom(newPlayer);
+        }
+
+        public override void OnJoinedRoom()
+        {
+            base.OnJoinedRoom();
+
+        }
+        #endregion
     }
 
 }
