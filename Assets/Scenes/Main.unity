@@ -418,6 +418,7 @@ GameObject:
   - component: {fileID: 421813364}
   - component: {fileID: 421813363}
   - component: {fileID: 421813362}
+  - component: {fileID: 421813365}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -489,19 +490,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 421813363}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1545773171}
-        m_TargetAssemblyTypeName: TheNemesis.Launcher, Assembly-CSharp
-        m_MethodName: Quit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
 --- !u!114 &421813363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,6 +529,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421813360}
   m_CullTransparentMesh: 1
+--- !u!114 &421813365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421813360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db6608af89265948858d8a77bc1e4c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &455557508
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +765,7 @@ GameObject:
   - component: {fileID: 476656227}
   - component: {fileID: 476656226}
   - component: {fileID: 476656225}
+  - component: {fileID: 476656228}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -835,19 +837,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 476656226}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1545773171}
-        m_TargetAssemblyTypeName: TheNemesis.Launcher, Assembly-CSharp
-        m_MethodName: JoinRandomRoom
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
 --- !u!114 &476656226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -886,6 +876,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476656223}
   m_CullTransparentMesh: 1
+--- !u!114 &476656228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476656223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d35c548eaf671d44baa6fb6b1fb0ebf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &592226824
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,6 +897,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 592226825}
+  - component: {fileID: 592226826}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -917,6 +920,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &592226826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592226824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c66fc57b4ce90d4aa6dd81a55349873, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1699,6 +1714,7 @@ GameObject:
   - component: {fileID: 1376905585}
   - component: {fileID: 1376905584}
   - component: {fileID: 1376905583}
+  - component: {fileID: 1376905586}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -1770,19 +1786,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1376905584}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1545773171}
-        m_TargetAssemblyTypeName: TheNemesis.Launcher, Assembly-CSharp
-        m_MethodName: Quit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
 --- !u!114 &1376905584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1821,6 +1825,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376905581}
   m_CullTransparentMesh: 1
+--- !u!114 &1376905586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376905581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db6608af89265948858d8a77bc1e4c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1397068441
 GameObject:
   m_ObjectHideFlags: 0

@@ -143,6 +143,7 @@ namespace TheNemesis
         {
             base.OnLeftRoom();
             Debug.LogFormat("PUN - OnLeftRoom");
+
         }
 
         public override void OnDisconnected(DisconnectCause cause)

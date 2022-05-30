@@ -24,6 +24,8 @@ namespace TheNemesis
             else
                 player.CustomProperties.Add(TeamKey, value);
         }
+
+        
     }
 
 }
