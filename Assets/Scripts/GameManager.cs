@@ -12,6 +12,7 @@ namespace TheNemesis
         public static GameManager Instance { get; private set; }
 
         bool inGame = false;
+        
         bool launchingGame;
         int gameSceneBuildIndex = 1;
         int mainSceneBuildIndex = 0;
@@ -50,6 +51,8 @@ namespace TheNemesis
                 {
 
                 }
+                
+
             }
             else // In menu scene
             {
@@ -123,6 +126,13 @@ namespace TheNemesis
             
             // Setting flag
             launchingGame = true;
+
+            // Save room custom properties
+            RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time + Constants.StartDelay);
+            RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Paused);
+            RoomCustomPropertyUtility.SetBlueScore(PhotonNetwork.CurrentRoom, 0);
+            RoomCustomPropertyUtility.SetRedScore(PhotonNetwork.CurrentRoom, 0);
+            PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
 
             yield return new WaitForSeconds(1f);
 
