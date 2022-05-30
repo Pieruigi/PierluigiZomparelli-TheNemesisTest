@@ -52,7 +52,6 @@ namespace TheNemesis
             rb.isKinematic = true;
             coll.enabled = false;
 
-            //StartCoroutine(Reset());
         }
 
         public void Reset()

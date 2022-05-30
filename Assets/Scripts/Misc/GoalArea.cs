@@ -28,30 +28,39 @@ namespace TheNemesis
         {
             if (Tags.Ball.Equals(other.tag))
             {
+                int score = 0;
+                if (team == Team.Blue)
+                    score = RoomCustomPropertyUtility.GetRedScore(PhotonNetwork.CurrentRoom) + 1;
+                else
+                    score = RoomCustomPropertyUtility.GetBlueScore(PhotonNetwork.CurrentRoom) + 1;
+              
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    int score = 0;
-                    // Update score
-                    if (team == Team.Blue)
-                    {
-                        score = RoomCustomPropertyUtility.GetRedScore(PhotonNetwork.CurrentRoom) + 1;
+                    if(team == Team.Blue)
                         RoomCustomPropertyUtility.SetRedScore(PhotonNetwork.CurrentRoom, (byte)score);
-                    }
                     else
-                    {
-                        score = RoomCustomPropertyUtility.GetBlueScore(PhotonNetwork.CurrentRoom) + 1;
                         RoomCustomPropertyUtility.SetBlueScore(PhotonNetwork.CurrentRoom, (byte)score);
-                    }
 
-                    // Change state to paused
-                    StartCoroutine(SetMatchPaused());
+                    // Synch the score to show it asap
+                    PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
+
+                    // Change state
+                    if (score == 3)
+                        StartCoroutine(SetMatchCompleted());
+                    else
+                        StartCoroutine(SetMatchPaused());
+                    
                 }
 
                 // All clients hide the ball
                 other.GetComponent<BallController>().Explode();
 
-                StartCoroutine(ResetBall());
-                StartCoroutine(ResetLocalPlayer());
+                if (score < 3)
+                {
+                    StartCoroutine(ResetBall());
+                    StartCoroutine(ResetLocalPlayer());
+                }
+                
             }
         }
 
@@ -63,7 +72,18 @@ namespace TheNemesis
             yield return new WaitForSeconds(delayOnGoal);
             
             RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Paused);
-            RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time);
+            RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time + Constants.StartDelay);
+            PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
+        }
+
+        IEnumerator SetMatchCompleted()
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
+
+            RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Completed);
             PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
         }
 

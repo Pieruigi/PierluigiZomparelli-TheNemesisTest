@@ -58,7 +58,6 @@ namespace TheNemesis
                     PlayerController.LocalPlayerController.SetEnabled(true);
                     break;
 
-                case (byte)MatchState.Completed:
                 case (byte)MatchState.Paused:
                     PlayerController.LocalPlayerController.SetEnabled(false);
                     break;

@@ -17,6 +17,7 @@ namespace TheNemesis
         int gameSceneBuildIndex = 1;
         int mainSceneBuildIndex = 0;
 
+      
         private void Awake()
         {
             if (!Instance)
