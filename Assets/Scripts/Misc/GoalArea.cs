@@ -10,6 +10,8 @@ namespace TheNemesis
         [SerializeField]
         Team team;
 
+        
+
         float delayOnGoal = 3;
 
         // Start is called before the first frame update
@@ -94,6 +96,26 @@ namespace TheNemesis
         {
             yield return new WaitForSeconds(delayOnGoal);
             PlayerController.LocalPlayerController.Reset();
+        }
+
+        public bool IsLocalGoalArea()
+        {
+            // Get local player team
+            int localTeam = (byte)PlayerCustomPropertyUtility.GetTeamId(PhotonNetwork.LocalPlayer);
+            if (localTeam == (byte)team)
+                return true;
+            else
+                return false;
+        }
+
+        public Vector2 GetHorizontalBoundaries()
+        {
+            return LevelManager.Instance.GetHorizontalGoalAreaBoundaries((byte)team);
+        }
+
+        public Vector2 GetVerticalBoundaries()
+        {
+            return LevelManager.Instance.GetVerticalGoalAreaBoundaries((byte)team);
         }
     }
 

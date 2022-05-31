@@ -76,9 +76,12 @@ namespace TheNemesis
             {
                 inGame = false;
                 
+                // You can do stuff here while in main menu ( not in game )
             }
             else
             {
+                // Game scene has just been loaded, we instantiate over the network the local player on each
+                // client and only the master client instantiates and owns the ball
                 inGame = true;
                 
                 if(PhotonNetwork.IsMasterClient)
@@ -90,7 +93,7 @@ namespace TheNemesis
                 // Create the local player
                 GameObject player = PhotonNetwork.Instantiate(System.IO.Path.Combine(Constants.PlayerResourceFolder, Constants.DefaultPlayerPrefabName), spawnPoint.position, spawnPoint.rotation);
 
-                // Spawn the ball
+                // Spawn the ball ( supports host migration )
                 if (PhotonNetwork.IsMasterClient)
                 {
                     PhotonNetwork.InstantiateRoomObject(System.IO.Path.Combine(Constants.BallResourceFolder, Constants.DefaultBallPrefabName), LevelManager.Instance.GetBallSpawnPoint().position, Quaternion.identity);
@@ -130,32 +133,41 @@ namespace TheNemesis
 
             // Save room custom properties
             MatchController.SetMatchPaused();
-            //RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time + Constants.StartDelay);
-            //RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Paused);
             RoomCustomPropertyUtility.SetBlueScore(PhotonNetwork.CurrentRoom, 0);
             RoomCustomPropertyUtility.SetRedScore(PhotonNetwork.CurrentRoom, 0);
             PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
 
+            // Wait for data synchronization
             yield return new WaitForSeconds(1f);
 
-            // Load scene
+            // Load scene on all clients
             PhotonNetwork.LoadLevel(gameSceneBuildIndex);
         }
 
         
 
         #region pun callbacks
+        /// <summary>
+        /// Remote player entered
+        /// </summary>
+        /// <param name="newPlayer"></param>
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             base.OnPlayerEnteredRoom(newPlayer);
         }
 
+        /// <summary>
+        /// Local player joined room
+        /// </summary>
         public override void OnJoinedRoom()
         {
             base.OnJoinedRoom();
 
         }
 
+        /// <summary>
+        /// Local player left room
+        /// </summary>
         public override void OnLeftRoom()
         {
             base.OnLeftRoom();

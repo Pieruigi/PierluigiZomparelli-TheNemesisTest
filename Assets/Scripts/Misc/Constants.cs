@@ -18,6 +18,7 @@ namespace TheNemesis
 
         public static readonly float StartDelay = 6;
         public static readonly int GoalsToWin = 3;
+
     }
 
     public class Tags
@@ -26,4 +27,8 @@ namespace TheNemesis
         
     }
 
+    public class EventCode
+    {
+        public static byte ResetGoalArea = 199;
+    }
 }

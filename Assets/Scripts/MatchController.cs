@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -27,18 +28,22 @@ namespace TheNemesis
 
         
         bool opponentQuit = false;
+        GoalArea localGoalArea;
+        GoalArea opponentGoalArea;
 
         private void Awake()
         {
             if (!Instance)
             {
                 Instance = this;
+                PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
             }
             else
             {
                 Destroy(gameObject);
             }
         }
+
 
         // Start is called before the first frame update
         void Start()
@@ -47,6 +52,11 @@ namespace TheNemesis
             startTime = RoomCustomPropertyUtility.GetStartTime(PhotonNetwork.CurrentRoom);
             // Get match state
             matchState = RoomCustomPropertyUtility.GetMatchState(PhotonNetwork.CurrentRoom);
+
+            // Get the local goal area
+            localGoalArea = new List<GoalArea>(GameObject.FindObjectsOfType<GoalArea>()).Find(g => g.IsLocalGoalArea());
+            opponentGoalArea = new List<GoalArea>(GameObject.FindObjectsOfType<GoalArea>()).Find(g => !g.IsLocalGoalArea());
+
 
             UpdateMatchState();
                 
@@ -75,6 +85,11 @@ namespace TheNemesis
             
         }
 
+        private void OnDestroy()
+        {
+            PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+        }
+
         void UpdateMatchState()
         {
             switch (matchState)
@@ -85,8 +100,34 @@ namespace TheNemesis
 
                 case (byte)MatchState.Paused:
                     PlayerController.LocalPlayerController.SetEnabled(false);
+                    // Set goal area position ( the event is cached, so even the client who enters the second
+                    // will receive it ); using events we don't need to add photonView to the goal area
+                    ResetGoalAreaPosition();
                     break;
             }
+        }
+
+        void ResetGoalAreaPosition()
+        {
+            // Get a random position
+            Vector2 hBound = localGoalArea.GetHorizontalBoundaries();
+            Vector2 vBound = localGoalArea.GetVerticalBoundaries();
+
+            Vector2 newPosition = new Vector2(Random.Range(hBound.x,hBound.y), Random.Range(vBound.x,vBound.y));
+
+            // Set the local goal area
+            UpdateGoalAreaPosition(localGoalArea.transform, newPosition);
+
+            // Raise event to update the remote client
+            object[] content = new object[] { newPosition }; // Array contains the target position
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others }; 
+            PhotonNetwork.RaiseEvent(EventCode.ResetGoalArea, content, raiseEventOptions, SendOptions.SendReliable);
+        }
+
+        void UpdateGoalAreaPosition(Transform target, Vector2 newPosition)
+        {
+            float defaultY = target.position.y;
+            target.position = new Vector3(newPosition.x, defaultY, newPosition.y);
         }
 
         #region public static fields
@@ -104,6 +145,9 @@ namespace TheNemesis
 
 
         #region pun callbacks
+     
+        
+
         public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
         {
             base.OnRoomPropertiesUpdate(propertiesThatChanged);
@@ -121,6 +165,7 @@ namespace TheNemesis
             }
         }
 
+
         // If the other player leaves the room you win
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
@@ -132,6 +177,19 @@ namespace TheNemesis
                 RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Completed);
                 PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
                 OnOpponentQuit?.Invoke();
+            }
+        }
+
+        private void OnEvent(EventData photonEvent)
+        {
+            byte eventCode = photonEvent.Code;
+            if (eventCode == EventCode.ResetGoalArea)
+            {
+                
+                object[] data = (object[])photonEvent.CustomData;
+                Vector2 targetPosition = (Vector2)data[0];
+                // We set the opponent goal area position
+                UpdateGoalAreaPosition(opponentGoalArea.transform, targetPosition);
             }
         }
         #endregion
