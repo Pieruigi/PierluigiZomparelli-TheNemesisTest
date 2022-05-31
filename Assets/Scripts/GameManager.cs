@@ -129,8 +129,9 @@ namespace TheNemesis
             launchingGame = true;
 
             // Save room custom properties
-            RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time + Constants.StartDelay);
-            RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Paused);
+            MatchController.SetMatchPaused();
+            //RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time + Constants.StartDelay);
+            //RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Paused);
             RoomCustomPropertyUtility.SetBlueScore(PhotonNetwork.CurrentRoom, 0);
             RoomCustomPropertyUtility.SetRedScore(PhotonNetwork.CurrentRoom, 0);
             PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);

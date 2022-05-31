@@ -17,6 +17,7 @@ namespace TheNemesis
         public static readonly string DefaultBallPrefabName = "Ball";
 
         public static readonly float StartDelay = 6;
+        public static readonly int GoalsToWin = 3;
     }
 
     public class Tags

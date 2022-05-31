@@ -26,6 +26,9 @@ namespace TheNemesis
 
         private void OnTriggerEnter(Collider other)
         {
+            if (MatchController.Instance.State == (byte)MatchState.Completed)
+                return;
+
             if (Tags.Ball.Equals(other.tag))
             {
                 int score = 0;
@@ -36,18 +39,20 @@ namespace TheNemesis
               
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    if(team == Team.Blue)
+                    if (score == Constants.GoalsToWin)
+                        MatchController.SetMatchCompleted();
+                        //RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Completed);
+
+                    if (team == Team.Blue)
                         RoomCustomPropertyUtility.SetRedScore(PhotonNetwork.CurrentRoom, (byte)score);
                     else
                         RoomCustomPropertyUtility.SetBlueScore(PhotonNetwork.CurrentRoom, (byte)score);
 
-                    // Synch the score to show it asap
+                    // Synch properties
                     PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
 
                     // Change state
-                    if (score == 3)
-                        StartCoroutine(SetMatchCompleted());
-                    else
+                    if (score < Constants.GoalsToWin)
                         StartCoroutine(SetMatchPaused());
                     
                 }
@@ -70,22 +75,14 @@ namespace TheNemesis
                 yield break;
 
             yield return new WaitForSeconds(delayOnGoal);
-            
-            RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Paused);
-            RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time + Constants.StartDelay);
+
+            //RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Paused);
+            //RoomCustomPropertyUtility.SetStartTime(PhotonNetwork.CurrentRoom, PhotonNetwork.Time + Constants.StartDelay);
+            MatchController.SetMatchPaused();
             PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
         }
 
-        IEnumerator SetMatchCompleted()
-        {
-            if (!PhotonNetwork.IsMasterClient)
-                yield break;
 
-            yield return new WaitForSeconds(0.5f);
-
-            RoomCustomPropertyUtility.SetMatchState(PhotonNetwork.CurrentRoom, (byte)MatchState.Completed);
-            PhotonNetwork.CurrentRoom.SetCustomProperties(PhotonNetwork.CurrentRoom.CustomProperties);
-        }
 
         IEnumerator ResetBall()
         {
