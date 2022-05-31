@@ -139,7 +139,9 @@ namespace TheNemesis
         {
             if (!PhotonNetwork.IsMasterClient) // Just as a reminder
                 yield break;
-            
+
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+
             // Setting flag
             launchingGame = true;
 
