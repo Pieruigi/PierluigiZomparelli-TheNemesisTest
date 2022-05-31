@@ -110,8 +110,10 @@ namespace TheNemesis
         void ResetGoalAreaPosition()
         {
             // Get a random position
-            Vector2 hBound = localGoalArea.GetHorizontalBoundaries();
-            Vector2 vBound = localGoalArea.GetVerticalBoundaries();
+            Vector2 hBound, vBound;
+
+            LevelManager.Instance.GetRandomBoundaries(out hBound, out vBound);
+            
 
             Vector2 newPosition = new Vector2(Random.Range(hBound.x,hBound.y), Random.Range(vBound.x,vBound.y));
 

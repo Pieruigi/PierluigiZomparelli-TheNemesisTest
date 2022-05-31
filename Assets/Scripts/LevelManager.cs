@@ -90,6 +90,13 @@ namespace TheNemesis
         {
             return verticalBoundaries[team - 1];
         }
+
+        public void GetRandomBoundaries(out Vector2 horizontal, out Vector2 vertical)
+        {
+            int i = Random.Range(0, 2);
+            horizontal = horizontalBoundaries[i];
+            vertical = verticalBoundaries[i];
+        }
         #endregion
 
     }
