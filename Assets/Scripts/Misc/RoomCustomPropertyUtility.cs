@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace TheNemesis
 {
+    /// <summary>
+    /// Helper to get/set room custom properties
+    /// </summary>
     public class RoomCustomPropertyUtility
     {
         public static readonly string StartTimeKey = "st";
@@ -14,6 +17,8 @@ namespace TheNemesis
 
         public static double GetStartTime(Room room)
         {
+
+
             object ret;
             if (!room.CustomProperties.TryGetValue(StartTimeKey, out ret))
                 ret = (double)0;
@@ -31,6 +36,7 @@ namespace TheNemesis
 
         public static byte GetMatchState(Room room)
         {
+
             object ret;
             if (!room.CustomProperties.TryGetValue(MatchStateKey, out ret))
                 ret = (byte)0;
@@ -48,6 +54,7 @@ namespace TheNemesis
 
         public static byte GetBlueScore(Room room)
         {
+
             object ret;
             if (!room.CustomProperties.TryGetValue(BlueScoreKey, out ret))
                 ret = (byte)0;
@@ -65,6 +72,7 @@ namespace TheNemesis
 
         public static byte GetRedScore(Room room)
         {
+
             object ret;
             if (!room.CustomProperties.TryGetValue(RedScoreKey, out ret))
                 ret = (byte)0;

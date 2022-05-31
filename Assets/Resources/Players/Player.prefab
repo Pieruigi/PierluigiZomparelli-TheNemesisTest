@@ -175,6 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 10
   acc: 30
+  extraBounceForce: 20
 --- !u!54 &2859432918796315262
 Rigidbody:
   m_ObjectHideFlags: 0

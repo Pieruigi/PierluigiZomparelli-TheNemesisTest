@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TheNemesis
 {
+    /// <summary>
+    /// Manage some ball behaviour.
+    /// </summary>
     public class BallController : MonoBehaviour
     {
         public static BallController Instance { get; private set; }
@@ -56,11 +59,12 @@ namespace TheNemesis
 
         public void Reset()
         {
-            
+            // Reset physics
             rb.position = defaultPosition;
             coll.enabled = true;
             rb.isKinematic = false;
 
+            // Show mesh
             mesh.SetActive(true);
         }
     }

@@ -6,11 +6,12 @@ using UnityEngine;
 
 namespace TheNemesis
 {
+    /// <summary>
+    /// Use the launcher to connect to photon network, to join or create rooms.
+    /// </summary>
     public class Launcher : MonoBehaviourPunCallbacks
     {
         
-        
-
         public static Launcher Instance { get; private set; }
 
         string gameVersion = "1.0";
@@ -39,39 +40,23 @@ namespace TheNemesis
 
         }
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
+      
         void Connect()
         {
             
-
             if (PhotonNetwork.IsConnected)
             {
-                // Already connected to photon network, join a random room
+                // Already connected to photon network
                 Debug.LogFormat("PUN - Connected to Photon network");
 
-                // When the player quits the lobby the client automatically reconnects to the photon network,
-                // so this flag avoids the player to rejoin the lobby again
+                // When the player quits an existing room the client automatically reconnects to the photon 
+                // network, so this flag avoids the player to rejoin the lobby again
                 if (connecting)
                 {
                     connecting = false;
                     Debug.Log("PUN - JoinRandomOrCreateRoom()");
                     PhotonNetwork.JoinRandomRoom(null, (byte)maxPlayers);
-
                 }
-                
-
-                
             }
             else
             {
@@ -83,15 +68,22 @@ namespace TheNemesis
         }
 
         #region public methods
+        /// <summary>
+        /// Join a random room
+        /// </summary>
         public void JoinRandomRoom()
         {
-            
+            // First connect
             connecting = true;
             Connect();
         }
 
+        /// <summary>
+        /// Quit a room ( whether in game or lobby )
+        /// </summary>
         public void Quit()
         {
+            // Quit
             connecting = false;
             PhotonNetwork.LeaveRoom();
 
@@ -109,6 +101,7 @@ namespace TheNemesis
             {
                 connecting = false;
                 Debug.Log("PUN - JoinRandomOrCreateRoom()");
+                // Try to join a random room if exists
                 PhotonNetwork.JoinRandomRoom(null, (byte)maxPlayers);
             }
             
@@ -117,7 +110,7 @@ namespace TheNemesis
 
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
-            // No room found
+            // No random room has been found, we must create our own room then
             base.OnJoinRandomFailed(returnCode, message);
             Debug.LogWarningFormat("PUN - OnJoinRandomFailed:({0}) {1}", returnCode, message);
 
@@ -127,12 +120,18 @@ namespace TheNemesis
             PhotonNetwork.CreateRoom(null, options, null);
         }
 
+        /// <summary>
+        /// When the local player joins a room
+        /// </summary>
         public override void OnJoinedRoom()
         {
             base.OnJoinedRoom();
             Debug.LogFormat("PUN - OnJoinedRoom: {0}", PhotonNetwork.CurrentRoom.Name);
         }
 
+        /// <summary>
+        /// On room creation
+        /// </summary>
         public override void OnCreatedRoom()
         {
             base.OnCreatedRoom();
@@ -146,6 +145,7 @@ namespace TheNemesis
 
         }
 
+        
         public override void OnDisconnected(DisconnectCause cause)
         {
             base.OnDisconnected(cause);

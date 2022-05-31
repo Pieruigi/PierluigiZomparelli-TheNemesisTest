@@ -36,19 +36,7 @@ namespace TheNemesis.UI
                 int time = Mathf.Max(0, (int)(startTime - PhotonNetwork.Time));
                 delayText.text = time.ToString();
             }
-            //int state = RoomCustomPropertyUtility.GetMatchState(PhotonNetwork.CurrentRoom);
-
-            //if(state == (byte)MatchState.Paused)
-            //{
-            //    delayText.gameObject.SetActive(true);
-            //    double startTime = RoomCustomPropertyUtility.GetStartTime(PhotonNetwork.CurrentRoom);
-            //    int time = Mathf.Max(0, (int)(startTime - PhotonNetwork.Time));
-            //    delayText.text = time.ToString();
-            //}
-            //else
-            //{
-            //    delayText.gameObject.SetActive(false);
-            //}
+         
 
         }
 

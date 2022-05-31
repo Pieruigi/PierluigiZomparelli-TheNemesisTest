@@ -7,13 +7,17 @@ using UnityEngine.SceneManagement;
 
 namespace TheNemesis
 {
+    /// <summary>
+    /// Manage game flow moving from main scene to game scene.
+    /// Local player and Ball ( only for MasterClient ) are network spawned here.
+    /// </summary>
     public class GameManager : MonoBehaviourPunCallbacks
     {
         public static GameManager Instance { get; private set; }
 
         bool inGame = false;
         
-        bool launchingGame;
+        bool launchingGame; // True if the engine is loading the game scene 
         int gameSceneBuildIndex = 1;
         int mainSceneBuildIndex = 0;
 
@@ -62,6 +66,8 @@ namespace TheNemesis
                 {
                     if (!launchingGame)
                     {
+                        // If all players are ready to start then load the game scene; the launchingGame flag
+                        // will be set true in the LaunchGame() coroutine.
                         if (AllPlayersAreReady())
                             StartCoroutine(LaunchGame());
                     }
@@ -93,7 +99,7 @@ namespace TheNemesis
                 // Create the local player
                 GameObject player = PhotonNetwork.Instantiate(System.IO.Path.Combine(Constants.PlayerResourceFolder, Constants.DefaultPlayerPrefabName), spawnPoint.position, spawnPoint.rotation);
 
-                // Spawn the ball ( supports host migration )
+                // Only the master client can spawn the ball ( supports host migration )
                 if (PhotonNetwork.IsMasterClient)
                 {
                     PhotonNetwork.InstantiateRoomObject(System.IO.Path.Combine(Constants.BallResourceFolder, Constants.DefaultBallPrefabName), LevelManager.Instance.GetBallSpawnPoint().position, Quaternion.identity);
@@ -102,6 +108,10 @@ namespace TheNemesis
             
         }
 
+        /// <summary>
+        /// Returns true if all the players have choosen a team.
+        /// </summary>
+        /// <returns></returns>
         bool AllPlayersAreReady()
         {
             if (PhotonNetwork.CurrentRoom == null)
@@ -127,6 +137,8 @@ namespace TheNemesis
         /// <returns></returns>
         IEnumerator LaunchGame()
         {
+            if (!PhotonNetwork.IsMasterClient) // Just as a reminder
+                yield break;
             
             // Setting flag
             launchingGame = true;
@@ -154,6 +166,8 @@ namespace TheNemesis
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             base.OnPlayerEnteredRoom(newPlayer);
+
+            // Do whatever you want here
         }
 
         /// <summary>
@@ -163,6 +177,7 @@ namespace TheNemesis
         {
             base.OnJoinedRoom();
 
+            // Do whatever you want here
         }
 
         /// <summary>
@@ -179,6 +194,17 @@ namespace TheNemesis
             {
                 PhotonNetwork.LoadLevel(mainSceneBuildIndex);
             }
+        }
+
+        /// <summary>
+        /// When the other player left the room
+        /// </summary>
+        /// <param name="otherPlayer"></param>
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            base.OnPlayerLeftRoom(otherPlayer);
+
+            // Do whatever you want here
         }
         #endregion
     }

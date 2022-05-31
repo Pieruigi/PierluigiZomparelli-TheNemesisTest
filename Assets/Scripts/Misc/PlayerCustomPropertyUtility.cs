@@ -5,12 +5,16 @@ using UnityEngine;
 
 namespace TheNemesis
 {
+    /// <summary>
+    /// Helper to get/set player custom properties
+    /// </summary>
     public class PlayerCustomPropertyUtility
     {
         public static readonly string TeamKey = "tm";
 
         public static byte GetTeamId(Player player)
         {
+
             object ret = 0;
             if (!player.CustomProperties.TryGetValue(TeamKey, out ret))
                 ret = (byte)0;

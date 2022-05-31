@@ -37,9 +37,7 @@ namespace TheNemesis.UI
             panels[id].gameObject.SetActive(true);
         }
 
-        #region public methods
-
-        #endregion
+       
 
         #region pun callbacks
         public override void OnJoinedRoom()

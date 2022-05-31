@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace TheNemesis
 {
+    /// <summary>
+    /// Player controller.
+    /// </summary>
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         [SerializeField]
@@ -12,6 +15,12 @@ namespace TheNemesis
 
         [SerializeField]
         float acc = 5;
+
+        /// <summary>
+        /// If > 0 a little more of bouncing to the player when hit things
+        /// </summary>
+        [SerializeField]
+        float extraBounceForce = 0; 
 
         Rigidbody rb;
         Vector3 targetVelocity, currentVelocity;
@@ -27,6 +36,8 @@ namespace TheNemesis
         {
             rb = GetComponent<Rigidbody>();
             coll = GetComponent<Collider>();
+
+            // Store the starting position ( useful on reset )
             positionDefault = rb.position;
 
             // Set the local player controller static field
@@ -71,16 +82,38 @@ namespace TheNemesis
             }
         }
 
+        private void OnCollisionEnter(Collision collision)
+        {
+           
+            if (photonView.IsMine)
+            {
+                Vector3 forceDir = collision.contacts[0].normal;
+                forceDir.y = 0;
+                currentVelocity += forceDir * extraBounceForce;
+            }
+        }
+
+        /// <summary>
+        /// Disables the controller ( local player only )
+        /// </summary>
+        /// <param name="value"></param>
         public void SetEnabled(bool value)
         {
             controllerEnabled = value;
         }
 
+        /// <summary>
+        /// Sets/resets collider ( all players )
+        /// </summary>
+        /// <param name="value"></param>
         public void SetColliderEnabled(bool value)
         {
             coll.enabled = value;
         }
 
+        /// <summary>
+        /// Reset on paused ( all players )
+        /// </summary>
         public void Reset()
         {
             SetEnabled(false);

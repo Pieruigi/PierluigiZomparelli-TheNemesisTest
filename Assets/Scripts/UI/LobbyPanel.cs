@@ -28,17 +28,7 @@ namespace TheNemesis.UI
             remotePlayerDefaultPosition = remotePlayer.transform.position;
         }
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+     
 
         public override void OnEnable()
         {
@@ -51,25 +41,11 @@ namespace TheNemesis.UI
             localPlayer.transform.position = localPlayerDefaultPosition;
             remotePlayer.transform.position = remotePlayerDefaultPosition;
 
-            // Try to get local player team 
-            //int localTeamId = PlayerCustomPropertyUtility.GetTeamId(PhotonNetwork.LocalPlayer);
-            //object value;
-
-            //if(PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(PlayerCustomProperties.TeamKey, out value))
-            //{
-            //    localTeamId = (byte)value;
-            //}
-
+          
             // Set the opponent field
-           
             opponent = new List<Player>(PhotonNetwork.CurrentRoom.Players.Values).Find(p => p != PhotonNetwork.LocalPlayer);
 
-            // Try to get the opponent team
-            //int remoteTeamId = PlayerCustomPropertyUtility.GetTeamId(opponent);
-            //if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(PlayerCustomProperties.TeamKey, out value))
-            //{
-            //    remoteTeamId = (byte)value;
-            //}
+         
            
             
         }

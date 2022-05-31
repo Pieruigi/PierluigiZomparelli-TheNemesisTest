@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace TheNemesis
 {
+    /// <summary>
+    /// Read the player team and set the appropriate color.
+    /// </summary>
     public class PlayerColorSetter : MonoBehaviour
     {
         [SerializeField]

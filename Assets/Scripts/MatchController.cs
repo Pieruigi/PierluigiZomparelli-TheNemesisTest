@@ -9,11 +9,15 @@ using UnityEngine.Events;
 namespace TheNemesis
 {
     
-
-    
-
+    /// <summary>
+    /// Takes care of the state of the match ( is playing, in paused or completed ).
+    /// The match state and other params such as the StartTime are stored in the roomCustomProperties and can
+    /// be only updated by the master client.
+    /// </summary>
+   
     public class MatchController : MonoBehaviourPunCallbacks
     {
+        // Call when the opponent quit the game
         public UnityAction OnOpponentQuit;
 
         public static MatchController Instance { get; private set; }
@@ -22,9 +26,9 @@ namespace TheNemesis
         {
             get { return matchState; }
         }
-        int matchState;
+        int matchState; 
         double startTime;
-        float startDelay = 6;
+        float startDelay = 6; // How much time we must wait for the match to start ( even after each goal )
 
         
         bool opponentQuit = false;
@@ -53,11 +57,13 @@ namespace TheNemesis
             // Get match state
             matchState = RoomCustomPropertyUtility.GetMatchState(PhotonNetwork.CurrentRoom);
 
-            // Get the local goal area
+            // Get the local goal area.
+            // Local goal areas are built in the scene because we don't really need to spawn them, but we 
+            // only need to reset the position and this can be done using events.
             localGoalArea = new List<GoalArea>(GameObject.FindObjectsOfType<GoalArea>()).Find(g => g.IsLocalGoalArea());
             opponentGoalArea = new List<GoalArea>(GameObject.FindObjectsOfType<GoalArea>()).Find(g => !g.IsLocalGoalArea());
 
-
+            // Update state
             UpdateMatchState();
                 
         }
@@ -65,6 +71,7 @@ namespace TheNemesis
         // Update is called once per frame
         void Update()
         {
+            // Only the master client can update the state on the room custom properties
             if (PhotonNetwork.IsMasterClient)
             {
                 switch (matchState)
@@ -107,25 +114,31 @@ namespace TheNemesis
             }
         }
 
+        /// <summary>
+        /// Each player resets the position of their own goal area while in paused and then updates the 
+        /// other players raising an event
+        /// </summary>
         void ResetGoalAreaPosition()
         {
             // Get a random position
             Vector2 hBound, vBound;
-
             LevelManager.Instance.GetRandomBoundaries(out hBound, out vBound);
-            
-
             Vector2 newPosition = new Vector2(Random.Range(hBound.x,hBound.y), Random.Range(vBound.x,vBound.y));
 
             // Set the local goal area
             UpdateGoalAreaPosition(localGoalArea.transform, newPosition);
 
-            // Raise event to update the remote client
+            // Raise an event to update the opponent player
             object[] content = new object[] { newPosition }; // Array contains the target position
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others }; 
             PhotonNetwork.RaiseEvent(EventCode.ResetGoalArea, content, raiseEventOptions, SendOptions.SendReliable);
         }
 
+        /// <summary>
+        /// Physically adjust the position of the target goal area in the scene.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="newPosition"></param>
         void UpdateGoalAreaPosition(Transform target, Vector2 newPosition)
         {
             float defaultY = target.position.y;
@@ -149,7 +162,10 @@ namespace TheNemesis
         #region pun callbacks
      
         
-
+        /// <summary>
+        /// Call on all the clients when room properties get updated
+        /// </summary>
+        /// <param name="propertiesThatChanged"></param>
         public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
         {
             base.OnRoomPropertiesUpdate(propertiesThatChanged);
@@ -168,7 +184,10 @@ namespace TheNemesis
         }
 
 
-        // If the other player leaves the room you win
+        /// <summary>
+        /// If the opponent player leaves the room while playing you win 
+        /// </summary>
+        /// <param name="otherPlayer"></param>
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             base.OnPlayerLeftRoom(otherPlayer);
@@ -182,6 +201,10 @@ namespace TheNemesis
             }
         }
 
+        /// <summary>
+        /// Handle events
+        /// </summary>
+        /// <param name="photonEvent"></param>
         private void OnEvent(EventData photonEvent)
         {
             byte eventCode = photonEvent.Code;
